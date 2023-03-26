@@ -4,7 +4,7 @@ using namespace std;
 
 const int nmax = 2e5 + 7;
 vector<vector<pair<int,int>>>adj(nmax);
-int parent[nmax], emin[nmax];
+int parent[nmax], sizes[nmax], emin[nmax];
 long long ans;
 
 struct edge
@@ -17,14 +17,17 @@ edge edges[nmax];
 void init(int n)
 {
     for(int i=1; i<=n; i++)
+    {
         parent[i] = i;
+        sizes[i] = 1;
+    }
 }
 
 int find(int node)
 {
     if(node == parent[node])
         return node;
-    return find(parent[node]);
+    return parent[node] = find(parent[node]);
 }
 
 bool unite(int u,int v)
@@ -33,7 +36,10 @@ bool unite(int u,int v)
     v = find(v);
     if(u == v)
         return 0;
+    if(sizes[u] < sizes[v])
+        swap(u,v);
     parent[v] = u;
+    sizes[u] += sizes[v];
     return 1;
 }
 
