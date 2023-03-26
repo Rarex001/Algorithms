@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+const int nmax = 2e5 + 7;
+vector<vector<pair<int,int>>>adj(nmax);
+int parent[nmax], emin[nmax];
+long long ans;
+
+struct edge
+{
+    int u,v,w;
+};
+
+edge edges[nmax];
+
+void init(int n)
+{
+    for(int i=1; i<=n; i++)
+        parent[i] = i;
+}
+
+int find(int node)
+{
+    if(node == parent[node])
+        return node;
+    return find(parent[node]);
+}
+
+bool unite(int u,int v)
+{
+    u = find(u);
+    v = find(v);
+    if(u == v)
+        return 0;
+    parent[v] = u;
+    return 1;
+}
+
+int main()
+{
+    int n,m,c;ans = 0;
+    cin >> n >> m;
+    for(int i=1; i<=m; i++)
+        cin >> edges[i].u >> edges[i].v >> edges[i].w;
+    init(n);
+    c = n;
+    while(c > 1)
+    {
+        for(int i=1; i<=n; i++)
+            emin[i] = -1;
+        for(int i=1; i<=m; i++)
+        {
+            int node;
+            if(find(edges[i].u) != find(edges[i].v))
+            {
+                node = find(edges[i].u);
+                if(emin[node] == -1 || edges[i].w < edges[emin[node]].w)
+                    emin[node] = i;
+                node = find(edges[i].v);
+                if(emin[node] == -1 || edges[i].w < edges[emin[node]].w)
+                    emin[node] = i;
+            }
+        }
+        for(int i=1; i<=n; i++)
+        {
+            int node = find(i);
+            if(emin[node] == -1)
+                continue;
+            if(unite(node, edges[emin[node]].v) == 1)
+            {
+                ans += edges[emin[node]].w;
+                c--;
+            }
+        }
+    }
+    cout << ans;
+    return 0;
+}
