@@ -1,3 +1,5 @@
+/// https://codeforces.com/blog/entry/68138
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -48,3 +50,4 @@ int main()
     dfs(1);
     return 0;
 }
+
